@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rick.spring.dao.HqhApiDao">
+
+    <resultMap type="com.rick.spring.entity.HqhApi" id="HqhApiMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="apiName" column="api_name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="method" column="method" jdbcType="VARCHAR"/>
+        <result property="parameters" column="parameters" jdbcType="VARCHAR"/>
+        <result property="example" column="example" jdbcType="VARCHAR"/>
+        <result property="calltimes" column="calltimes" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="exampleurl" column="exampleurl" jdbcType="VARCHAR"/>
+        <result property="author" column="author" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HqhApiMap">
+        select
+          id, api_name, description, method, parameters, example, calltimes, status, exampleurl, author
+        from hqh_api
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HqhApiMap">
+        select
+          id, api_name, description, method, parameters, example, calltimes, status, exampleurl, author
+        from hqh_api
+        <where>
+            <if test="hqhApi.id != null">
+                and id = #{hqhApi.id}
+            </if>
+            <if test="hqhApi.apiName != null and hqhApi.apiName != ''">
+                and api_name = #{hqhApi.apiName}
+            </if>
+            <if test="hqhApi.description != null and hqhApi.description != ''">
+                and description = #{hqhApi.description}
+            </if>
+            <if test="hqhApi.method != null and hqhApi.method != ''">
+                and method = #{hqhApi.method}
+            </if>
+            <if test="hqhApi.parameters != null and hqhApi.parameters != ''">
+                and parameters = #{hqhApi.parameters}
+            </if>
+            <if test="hqhApi.example != null and hqhApi.example != ''">
+                and example = #{hqhApi.example}
+            </if>
+            <if test="hqhApi.calltimes != null">
+                and calltimes = #{hqhApi.calltimes}
+            </if>
+            <if test="hqhApi.status != null and hqhApi.status != ''">
+                and status = #{hqhApi.status}
+            </if>
+            <if test="hqhApi.exampleurl != null and hqhApi.exampleurl != ''">
+                and exampleurl = #{hqhApi.exampleurl}
+            </if>
+            <if test="hqhApi.author != null and hqhApi.author != ''">
+                and author = #{hqhApi.author}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from hqh_api
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="apiName != null and apiName != ''">
+                and api_name = #{apiName}
+            </if>
+            <if test="description != null and description != ''">
+                and description = #{description}
+            </if>
+            <if test="method != null and method != ''">
+                and method = #{method}
+            </if>
+            <if test="parameters != null and parameters != ''">
+                and parameters = #{parameters}
+            </if>
+            <if test="example != null and example != ''">
+                and example = #{example}
+            </if>
+            <if test="calltimes != null">
+                and calltimes = #{calltimes}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="exampleurl != null and exampleurl != ''">
+                and exampleurl = #{exampleurl}
+            </if>
+            <if test="author != null and author != ''">
+                and author = #{author}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_api(api_name, description, method, parameters, example, calltimes, status, exampleurl, author)
+        values (#{apiName}, #{description}, #{method}, #{parameters}, #{example}, #{calltimes}, #{status}, #{exampleurl}, #{author})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_api(api_name, description, method, parameters, example, calltimes, status, exampleurl, author)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.apiName}, #{entity.description}, #{entity.method}, #{entity.parameters}, #{entity.example}, #{entity.calltimes}, #{entity.status}, #{entity.exampleurl}, #{entity.author})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_api(api_name, description, method, parameters, example, calltimes, status, exampleurl, author)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.apiName}, #{entity.description}, #{entity.method}, #{entity.parameters}, #{entity.example}, #{entity.calltimes}, #{entity.status}, #{entity.exampleurl}, #{entity.author})
+        </foreach>
+        on duplicate key update
+        api_name = values(api_name),
+        description = values(description),
+        method = values(method),
+        parameters = values(parameters),
+        example = values(example),
+        calltimes = values(calltimes),
+        status = values(status),
+        exampleurl = values(exampleurl),
+        author = values(author)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update hqh_api
+        <set>
+            <if test="apiName != null and apiName != ''">
+                api_name = #{apiName},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="method != null and method != ''">
+                method = #{method},
+            </if>
+            <if test="parameters != null and parameters != ''">
+                parameters = #{parameters},
+            </if>
+            <if test="example != null and example != ''">
+                example = #{example},
+            </if>
+            <if test="calltimes != null">
+                calltimes = #{calltimes},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="exampleurl != null and exampleurl != ''">
+                exampleurl = #{exampleurl},
+            </if>
+            <if test="author != null and author != ''">
+                author = #{author},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from hqh_api where id = #{id}
+    </delete>
+
+</mapper>
+

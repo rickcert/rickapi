@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rick.spring.dao.HqhPixivDao">
+
+    <resultMap type="com.rick.spring.entity.HqhPixiv" id="HqhPixivMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="VARCHAR"/>
+        <result property="p" column="p" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="author" column="author" jdbcType="VARCHAR"/>
+        <result property="r18" column="r18" jdbcType="VARCHAR"/>
+        <result property="width" column="width" jdbcType="VARCHAR"/>
+        <result property="height" column="height" jdbcType="VARCHAR"/>
+        <result property="tags" column="tags" jdbcType="VARCHAR"/>
+        <result property="ext" column="ext" jdbcType="VARCHAR"/>
+        <result property="uploaddate" column="uploadDate" jdbcType="VARCHAR"/>
+        <result property="original" column="original" jdbcType="VARCHAR"/>
+        <result property="delFlag" column="del_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HqhPixivMap">
+        select
+          id, pid, p, uid, title, author, r18, width, height, tags, ext, uploadDate, original, del_flag
+        from hqh_pixiv
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HqhPixivMap">
+        select
+          id, pid, p, uid, title, author, r18, width, height, tags, ext, uploadDate, original, del_flag
+        from hqh_pixiv
+        <where>
+            and del_flag = "0"
+            <if test="hqhPixiv.id != null">
+                and id = #{hqhPixiv.id}
+            </if>
+            <if test="hqhPixiv.pid != null and hqhPixiv.pid != ''">
+                and pid = #{hqhPixiv.pid}
+            </if>
+            <if test="hqhPixiv.p != null and hqhPixiv.p != ''">
+                and p = #{hqhPixiv.p}
+            </if>
+            <if test="hqhPixiv.uid != null and hqhPixiv.uid != ''">
+                and uid = #{hqhPixiv.uid}
+            </if>
+            <if test="hqhPixiv.title != null and hqhPixiv.title != ''">
+                and title like concat('%',#{hqhPixiv.title},'%')
+            </if>
+            <if test="hqhPixiv.author != null and hqhPixiv.author != ''">
+                and author like concat('%',#{hqhPixiv.author},'%')
+            </if>
+            <if test="hqhPixiv.r18 != null and hqhPixiv.r18 != ''">
+                and r18 = #{hqhPixiv.r18}
+            </if>
+            <if test="hqhPixiv.width != null and hqhPixiv.width != ''">
+                and width = #{hqhPixiv.width}
+            </if>
+            <if test="hqhPixiv.height != null and hqhPixiv.height != ''">
+                and height = #{hqhPixiv.height}
+            </if>
+            <if test="hqhPixiv.tags != null and hqhPixiv.tags != ''">
+                and tags like concat('%',#{hqhPixiv.tags},'%')
+            </if>
+            <if test="hqhPixiv.ext != null and hqhPixiv.ext != ''">
+                and ext = #{hqhPixiv.ext}
+            </if>
+            <if test="hqhPixiv.uploaddate != null and hqhPixiv.uploaddate != ''">
+                and uploadDate = #{hqhPixiv.uploaddate}
+            </if>
+            <if test="hqhPixiv.original != null and hqhPixiv.original != ''">
+                and original like concat('%', #{hqhPixiv.original},'%')
+            </if>
+<!--            <if test="hqhPixiv.delFlag != null and hqhPixiv.delFlag != ''">-->
+<!--                and del_flag = #{hqhPixiv.delFlag}-->
+<!--            </if>-->
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from hqh_pixiv
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="pid != null and pid != ''">
+                and pid = #{pid}
+            </if>
+            <if test="p != null and p != ''">
+                and p = #{p}
+            </if>
+            <if test="uid != null and uid != ''">
+                and uid = #{uid}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="author != null and author != ''">
+                and author = #{author}
+            </if>
+            <if test="r18 != null and r18 != ''">
+                and r18 = #{r18}
+            </if>
+            <if test="width != null and width != ''">
+                and width = #{width}
+            </if>
+            <if test="height != null and height != ''">
+                and height = #{height}
+            </if>
+            <if test="tags != null and tags != ''">
+                and tags = #{tags}
+            </if>
+            <if test="ext != null and ext != ''">
+                and ext = #{ext}
+            </if>
+            <if test="uploaddate != null and uploaddate != ''">
+                and uploadDate = #{uploaddate}
+            </if>
+            <if test="original != null and original != ''">
+                and original = #{original}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                and del_flag = #{delFlag}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_pixiv(p, uid, title, author, r18, width, height, tags, ext, uploadDate, original, del_flag)
+        values (#{p}, #{uid}, #{title}, #{author}, #{r18}, #{width}, #{height}, #{tags}, #{ext}, #{uploaddate}, #{original}, #{delFlag})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_pixiv(p, uid, title, author, r18, width, height, tags, ext, uploadDate, original, del_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.p}, #{entity.uid}, #{entity.title}, #{entity.author}, #{entity.r18}, #{entity.width}, #{entity.height}, #{entity.tags}, #{entity.ext}, #{entity.uploaddate}, #{entity.original}, #{entity.delFlag})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_pixiv(p, uid, title, author, r18, width, height, tags, ext, uploadDate, original, del_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.p}, #{entity.uid}, #{entity.title}, #{entity.author}, #{entity.r18}, #{entity.width}, #{entity.height}, #{entity.tags}, #{entity.ext}, #{entity.uploaddate}, #{entity.original}, #{entity.delFlag})
+        </foreach>
+        on duplicate key update
+        p = values(p),
+        uid = values(uid),
+        title = values(title),
+        author = values(author),
+        r18 = values(r18),
+        width = values(width),
+        height = values(height),
+        tags = values(tags),
+        ext = values(ext),
+        uploadDate = values(uploadDate),
+        original = values(original),
+        del_flag = values(del_flag)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update hqh_pixiv
+        <set>
+            <if test="p != null and p != ''">
+                p = #{p},
+            </if>
+            <if test="uid != null and uid != ''">
+                uid = #{uid},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="author != null and author != ''">
+                author = #{author},
+            </if>
+            <if test="r18 != null and r18 != ''">
+                r18 = #{r18},
+            </if>
+            <if test="width != null and width != ''">
+                width = #{width},
+            </if>
+            <if test="height != null and height != ''">
+                height = #{height},
+            </if>
+            <if test="tags != null and tags != ''">
+                tags = #{tags},
+            </if>
+            <if test="ext != null and ext != ''">
+                ext = #{ext},
+            </if>
+            <if test="uploaddate != null and uploaddate != ''">
+                uploadDate = #{uploaddate},
+            </if>
+            <if test="original != null and original != ''">
+                original = #{original},
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                del_flag = #{delFlag},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from hqh_pixiv where id = #{id}
+    </delete>
+
+</mapper>
+

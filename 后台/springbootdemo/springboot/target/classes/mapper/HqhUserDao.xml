@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rick.spring.dao.HqhUserDao">
+
+    <resultMap type="com.rick.spring.entity.HqhUser" id="HqhUserMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="professional" column="professional" jdbcType="VARCHAR"/>
+        <result property="sclass" column="sclass" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phonenumber" column="phonenumber" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="delFlag" column="del_flag" jdbcType="VARCHAR"/>
+        <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+        <result property="loginDate" column="login_date" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HqhUserMap">
+        select
+            user_id, user_name, nick_name, professional, sclass, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time
+        from hqh_user
+        where user_id = #{userId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HqhUserMap">
+        select
+        user_id, user_name, nick_name, professional, sclass, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time
+        from hqh_user
+        <where>
+            <!--            <if test="hqhUser.delFlag != null and hqhUser.delFlag != ''">-->
+            <!--                and del_flag = #{hqhUser.delFlag}-->
+            <!--            </if>-->
+            and del_flag = "0"
+            <if test="hqhUser.userId != null">
+                and user_id = #{hqhUser.userId}
+            </if>
+            <if test="hqhUser.userName != null and hqhUser.userName != ''">
+                and user_name like concat('%',#{hqhUser.userName},'%')
+            </if>
+            <if test="hqhUser.nickName != null and hqhUser.nickName != ''">
+                and nick_name like concat('%',#{hqhUser.nickName},'%')
+            </if>
+            <if test="hqhUser.professional != null and hqhUser.professional != ''">
+                and professional like concat('%',#{hqhUser.professional},'%')
+            </if>
+            <if test="hqhUser.sclass != null and hqhUser.sclass != ''">
+                and sclass  like concat('%',#{hqhUser.sclass},'%')
+            </if>
+            <if test="hqhUser.email != null and hqhUser.email != ''">
+                and email like concat('%',#{hqhUser.email},'%')
+            </if>
+            <if test="hqhUser.phonenumber != null and hqhUser.phonenumber != ''">
+                and phonenumber like concat('%',#{hqhUser.phonenumber},'%')
+            </if>
+            <if test="hqhUser.sex != null and hqhUser.sex != ''">
+                and sex = #{hqhUser.sex}
+            </if>
+            <if test="hqhUser.avatar != null and hqhUser.avatar != ''">
+                and avatar = #{hqhUser.avatar}
+            </if>
+            <if test="hqhUser.password != null and hqhUser.password != ''">
+                and password = #{hqhUser.password}
+            </if>
+            <if test="hqhUser.status != null and hqhUser.status != ''">
+                and status = #{hqhUser.status}
+            </if>
+
+            <if test="hqhUser.loginIp != null and hqhUser.loginIp != ''">
+                and login_ip = #{hqhUser.loginIp}
+            </if>
+            <if test="hqhUser.loginDate != null">
+                and login_date = #{hqhUser.loginDate}
+            </if>
+            <if test="hqhUser.createBy != null and hqhUser.createBy != ''">
+                and create_by = #{hqhUser.createBy}
+            </if>
+            <if test="hqhUser.createTime != null">
+                and create_time = #{hqhUser.createTime}
+            </if>
+            <if test="hqhUser.updateBy != null and hqhUser.updateBy != ''">
+                and update_by = #{hqhUser.updateBy}
+            </if>
+            <if test="hqhUser.updateTime != null">
+                and update_time = #{hqhUser.updateTime}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from hqh_user
+        <where>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                and nick_name = #{nickName}
+            </if>
+            <if test="professional != null and professional != ''">
+                and professional = #{professional}
+            </if>
+            <if test="sclass != null and sclass != ''">
+                and sclass = #{sclass}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="phonenumber != null and phonenumber != ''">
+                and phonenumber = #{phonenumber}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="avatar != null and avatar != ''">
+                and avatar = #{avatar}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                and del_flag = #{delFlag}
+            </if>
+            <if test="loginIp != null and loginIp != ''">
+                and login_ip = #{loginIp}
+            </if>
+            <if test="loginDate != null">
+                and login_date = #{loginDate}
+            </if>
+            <if test="createBy != null and createBy != ''">
+                and create_by = #{createBy}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                and update_by = #{updateBy}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryByUserName" resultMap="HqhUserMap">
+        select
+            user_id, user_name, nick_name, professional, sclass, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time
+        from hqh_user
+        where user_name = #{userName} and del_flag = "0"
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
+        insert into hqh_user(user_name, nick_name, professional, sclass, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time)
+        values (#{userName}, #{nickName}, #{professional}, #{sclass}, #{email}, #{phonenumber}, #{sex}, #{avatar}, #{password}, #{status}, #{delFlag}, #{loginIp}, #{loginDate}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into hqh_user(user_name, nick_name, professional, sclass, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userName}, #{entity.nickName}, #{entity.professional}, #{entity.sclass}, #{entity.email}, #{entity.phonenumber}, #{entity.sex}, #{entity.avatar}, #{entity.password}, #{entity.status}, #{entity.delFlag}, #{entity.loginIp}, #{entity.loginDate}, #{entity.createBy}, #{entity.createTime}, #{entity.updateBy}, #{entity.updateTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="userId" useGeneratedKeys="true">
+        insert into hqh_user(user_name, nick_name, professional, sclass, email, phonenumber, sex, avatar, password, status, del_flag, login_ip, login_date, create_by, create_time, update_by, update_time)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.userName}, #{entity.nickName}, #{entity.professional}, #{entity.sclass}, #{entity.email}, #{entity.phonenumber}, #{entity.sex}, #{entity.avatar}, #{entity.password}, #{entity.status}, #{entity.delFlag}, #{entity.loginIp}, #{entity.loginDate}, #{entity.createBy}, #{entity.createTime}, #{entity.updateBy}, #{entity.updateTime})
+        </foreach>
+        on duplicate key update
+        user_name = values(user_name),
+        nick_name = values(nick_name),
+        professional = values(professional),
+        sclass = values(sclass),
+        email = values(email),
+        phonenumber = values(phonenumber),
+        sex = values(sex),
+        avatar = values(avatar),
+        password = values(password),
+        status = values(status),
+        del_flag = values(del_flag),
+        login_ip = values(login_ip),
+        login_date = values(login_date),
+        create_by = values(create_by),
+        create_time = values(create_time),
+        update_by = values(update_by),
+        update_time = values(update_time)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update hqh_user
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="nickName != null and nickName != ''">
+                nick_name = #{nickName},
+            </if>
+            <if test="professional != null and professional != ''">
+                professional = #{professional},
+            </if>
+            <if test="sclass != null and sclass != ''">
+                sclass = #{sclass},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="phonenumber != null and phonenumber != ''">
+                phonenumber = #{phonenumber},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                del_flag = #{delFlag},
+            </if>
+            <if test="loginIp != null and loginIp != ''">
+                login_ip = #{loginIp},
+            </if>
+            <if test="loginDate != null">
+                login_date = #{loginDate},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from hqh_user where user_id = #{userId}
+    </delete>
+
+</mapper>
+

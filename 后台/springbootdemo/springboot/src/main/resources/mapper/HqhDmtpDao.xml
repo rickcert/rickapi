@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rick.spring.dao.HqhDmtpDao">
+
+    <resultMap type="com.rick.spring.entity.HqhDmtp" id="HqhDmtpMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="width" column="width" jdbcType="VARCHAR"/>
+        <result property="height" column="height" jdbcType="VARCHAR"/>
+        <result property="classification" column="classification" jdbcType="VARCHAR"/>
+        <result property="delFlag" column="del_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="HqhDmtpMap">
+        select
+          id, content, width, height, classification, del_flag
+        from hqh_dmtp
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="HqhDmtpMap">
+        select
+          id, content, width, height, classification, del_flag
+        from hqh_dmtp
+        <where>
+            and del_flag = "0"
+            <if test="hqhDmtp.id != null">
+                and id = #{id}
+            </if>
+            <if test="hqhDmtp.content != null and hqhDmtp.content != ''">
+                and content = #{hqhDmtp.content}
+            </if>
+            <if test="hqhDmtp.width != null and hqhDmtp.width != ''">
+                and width = #{hqhDmtp.width}
+            </if>
+            <if test="hqhDmtp.height != null and hqhDmtp.height != ''">
+                and height = #{hqhDmtp.height}
+            </if>
+            <if test="hqhDmtp.classification != null and hqhDmtp.classification != ''">
+                and classification like concat('%',#{hqhDmtp.classification},'%')
+            </if>
+<!--            <if test="delFlag != null and delFlag != ''">-->
+<!--                and del_flag = #{delFlag}-->
+<!--            </if>-->
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from hqh_dmtp
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="width != null and width != ''">
+                and width = #{width}
+            </if>
+            <if test="height != null and height != ''">
+                and height = #{height}
+            </if>
+            <if test="classification != null and classification != ''">
+                and classification = #{classification}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                and del_flag = #{delFlag}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_dmtp(content, width, height, classification, del_flag)
+        values (#{content}, #{width}, #{height}, #{classification}, #{delFlag})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_dmtp(content, width, height, classification, del_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.content}, #{entity.width}, #{entity.height}, #{entity.classification}, #{entity.delFlag})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into hqh_dmtp(content, width, height, classification, del_flag)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.content}, #{entity.width}, #{entity.height}, #{entity.classification}, #{entity.delFlag})
+        </foreach>
+        on duplicate key update
+        content = values(content),
+        width = values(width),
+        height = values(height),
+        classification = values(classification),
+        del_flag = values(del_flag)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update hqh_dmtp
+        <set>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="width != null and width != ''">
+                width = #{width},
+            </if>
+            <if test="height != null and height != ''">
+                height = #{height},
+            </if>
+            <if test="classification != null and classification != ''">
+                classification = #{classification},
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                del_flag = #{delFlag},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from hqh_dmtp where id = #{id}
+    </delete>
+
+</mapper>
+

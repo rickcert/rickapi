@@ -1,0 +1,29 @@
+mybatis:
+  mapper-locations: classpath:/mapper/*Dao.xml
+  typeAliasesPackage: com.rick.spring.entity
+server:
+  port: 9090
+file:
+  ip: localhost
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: 111111
+#    url: jdbc:mysql://localhost:3306/springboot-vue?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+    url: jdbc:mysql://107.150.124.219:3306/springboot-vue?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8
+    username: springboot-vue
+#    username: root
+  profiles:
+    active: prod
+  redis:
+    host: 107.150.124.219
+#    host: localhost
+    port: 6379
+    password: 12345678
+#    password:
+  main:
+      allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
